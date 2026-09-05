@@ -133,6 +133,16 @@ export type TransactionItem = {
   date: string;
 };
 
+export type TransactionEventItem = {
+  id: string;
+  phase: string;
+  label: string;
+  detail: string;
+  status: string;
+  time: string;
+  tone: Tone;
+};
+
 export type SubscriptionPlan = {
   id: string;
   code: string;
@@ -190,6 +200,7 @@ export type WorkflowState = {
   ruleWeights: RuleWeight[];
   aiTasks: AiTask[];
   apEnvironment: ApEnvironment | null;
+  transactionEvents: TransactionEventItem[];
   transactions: TransactionItem[];
 };
 

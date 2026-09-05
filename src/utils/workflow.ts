@@ -15,38 +15,38 @@ export const workflowTransitions: Record<
   START_SCAN: {
     expected: 'UPLOADED',
     next: 'SCANNING',
-    code: 'PDF_SECURITY_SCAN_STARTED',
-    detail: 'File type, MIME, magic bytes, hash, and malware checks started',
+    code: 'DOCUMENT_EVIDENCE_CHECK_STARTED',
+    detail: 'PDF evidence checks started while receivable verification remains backend-owned',
   },
   COMPLETE_EXTRACTION: {
     expected: 'SCANNING',
     next: 'EXTRACTED',
     code: 'INVOICE_EXTRACTED',
-    detail: 'Invoice fields extracted into reviewable values',
+    detail: 'Invoice fields captured for buyer and ERP comparison',
   },
   REQUEST_VERIFICATION: {
     expected: 'EXTRACTED',
     next: 'VERIFYING',
-    code: 'ERP_VERIFICATION_REQUESTED',
-    detail: 'Buyer ERP verification requested for invoice and purchase order',
+    code: 'BUYER_ERP_VERIFICATION_REQUESTED',
+    detail: 'Buyer and ERP confirmation requested for receivable, PO, amount, and unpaid status',
   },
   COMPLETE_VERIFICATION: {
     expected: 'VERIFYING',
     next: 'VERIFIED',
-    code: 'ERP_VERIFICATION_COMPLETED',
-    detail: 'Supplier, buyer, amount, PO, and unpaid status matched',
+    code: 'BUYER_ERP_VERIFICATION_COMPLETED',
+    detail: 'Buyer/ERP evidence recorded and delivery monitoring opened',
   },
   RUN_RISK: {
     expected: 'VERIFIED',
     next: 'RISK_ASSESSED',
     code: 'RISK_ASSESSMENT_COMPLETED',
-    detail: 'Explainable invoice risk assessment completed',
+    detail: 'Explainable transaction risk assessment completed from receivable evidence',
   },
   MARK_ELIGIBLE: {
     expected: 'RISK_ASSESSED',
     next: 'FINANCE_ELIGIBLE',
-    code: 'FINANCING_REQUESTED',
-    detail: 'Maximum advance and financing request created',
+    code: 'FINANCIER_MARKET_OPENED',
+    detail: 'Verified receivable opened to participating financiers',
   },
   DISBURSE_FUNDS: {
     expected: 'OFFER_ACCEPTED',
@@ -100,27 +100,27 @@ export function nextCommandForState(state: WorkflowState): WorkflowCommand | nul
 
 export function commandLabel(command: WorkflowCommand | null) {
   if (command === 'START_SCAN') {
-    return 'Start secure scan';
+    return 'Check document evidence';
   }
 
   if (command === 'COMPLETE_EXTRACTION') {
-    return 'Complete extraction';
+    return 'Store extracted fields';
   }
 
   if (command === 'REQUEST_VERIFICATION') {
-    return 'Request ERP verification';
+    return 'Request buyer / ERP check';
   }
 
   if (command === 'COMPLETE_VERIFICATION') {
-    return 'Confirm verification';
+    return 'Confirm buyer evidence';
   }
 
   if (command === 'RUN_RISK') {
-    return 'Run risk assessment';
+    return 'Assess transaction risk';
   }
 
   if (command === 'MARK_ELIGIBLE') {
-    return 'Mark finance eligible';
+    return 'Open financier market';
   }
 
   if (command === 'DISBURSE_FUNDS') {

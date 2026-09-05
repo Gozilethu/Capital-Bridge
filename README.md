@@ -1,8 +1,8 @@
 # CapitalBridge
 
-AI-powered invoice-to-cash and purchase-order financing prototype for SMEs.
+Transaction-evidence-powered invoice-to-cash and purchase-order financing prototype for SMEs.
 
-CapitalBridge helps an SME turn a verified unpaid invoice or confirmed purchase order into short-term working capital. The current repository contains an Expo React Native prototype. The AI verification sidecar can be cloned locally for extraction and fraud-check experiments.
+CapitalBridge helps an SME turn a verified and monitored commercial receivable into short-term working capital. The current repository contains an Expo React Native prototype. The AI verification sidecar can be cloned locally for extraction and fraud-check experiments.
 
 ## Current App
 
@@ -12,10 +12,10 @@ CapitalBridge helps an SME turn a verified unpaid invoice or confirmed purchase 
 - Supabase/PostgreSQL-backed invoice, offer, risk, notification, audit, and transaction records.
 - Desktop banking-style shell with top bar, sidebar, and restrained glass panels.
 - Supabase-owned account role for SME, Buyer, Financier, and Admin views.
-- Backend-owned invoice lifecycle from upload to settlement via Supabase RPCs.
+- Backend-owned receivable lifecycle from upload/discovery to buyer verification, financier offer, monitoring, and settlement via Supabase RPCs.
 - Explainable risk factors with a derived trust score.
 - Partial funding selection and transparent fee display.
-- Invoice Check mapping for extraction, ERP, duplicate, mismatch, and fraud concepts.
+- Transaction evidence layer for buyer confirmation, PO matching, delivery monitoring, duplicate prevention, and settlement history.
 - Audit trail for critical workflow events.
 
 ## Architecture Notes

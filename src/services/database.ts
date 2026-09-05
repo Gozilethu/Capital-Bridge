@@ -13,6 +13,7 @@ import type {
   Role,
   SubscriptionPlan,
   Tone,
+  TransactionEventItem,
   TransactionItem,
   UploadInvoiceInput,
   VerificationStatus,
@@ -205,6 +206,7 @@ async function loadWorkflowState(workspace: OrganisationWorkspace): Promise<Work
   const offers = financingRequest ? await loadOffers(financingRequest.id) : [];
   const acceptedOffer = offers.find((offer) => offer.status === 'ACCEPTED') ?? null;
   const riskFactors = await loadRiskFactors(workspace.organisationId, invoice.id);
+  const transactionEvents = await loadTransactionEvents(workspace.organisationId, invoice.id);
   const transactions = await loadTransactions(workspace.organisationId, invoice.id);
   const auditEvents = await loadAuditEvents(workspace.organisationId, invoice.id);
   const notifications = await loadNotifications(workspace.organisationId, invoice.id);
@@ -222,6 +224,7 @@ async function loadWorkflowState(workspace: OrganisationWorkspace): Promise<Work
     notifications,
     offers,
     riskFactors,
+    transactionEvents,
     ruleWeights: riskFactors.map((factor) => ({
       label: factor.label,
       value: factor.possible > 0 ? Math.round((factor.earned / factor.possible) * 100) : 0,
@@ -379,6 +382,28 @@ async function loadRiskFactors(organisationId: string, invoiceId: string): Promi
   });
 }
 
+async function loadTransactionEvents(organisationId: string, invoiceId: string): Promise<TransactionEventItem[]> {
+  const { data, error } = await supabase
+    .from('transaction_events')
+    .select('*')
+    .eq('organisation_id', organisationId)
+    .eq('invoice_id', invoiceId)
+    .order('occurred_at', { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return ((data ?? []) as Record<string, unknown>[]).map((row) => ({
+    detail: String(row.detail ?? ''),
+    id: String(row.id),
+    label: String(row.event_type ?? 'EVENT').replace(/_/g, ' '),
+    phase: String(row.phase ?? 'INVOICE').replace(/_/g, ' '),
+    status: String(row.status ?? 'PENDING').replace(/_/g, ' '),
+    time: formatDateTime(row.occurred_at ?? row.created_at),
+    tone: toneForEventStatus(row.status),
+  }));
+}
 async function loadTransactions(organisationId: string, invoiceId: string): Promise<TransactionItem[]> {
   const { data, error } = await supabase
     .from('funding_transactions')
@@ -612,6 +637,33 @@ function formatDate(value: unknown) {
   return new Date(String(value)).toLocaleDateString();
 }
 
+function formatDateTime(value: unknown) {
+  if (!value) {
+    return 'Pending';
+  }
+
+  const date = new Date(String(value));
+
+  return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+}
+
+function toneForEventStatus(value: unknown): Tone {
+  const status = String(value ?? '').toUpperCase();
+
+  if (status === 'PASSED' || status === 'POSTED' || status === 'RECONCILED') {
+    return 'green';
+  }
+
+  if (status === 'WARNING' || status === 'PENDING') {
+    return 'amber';
+  }
+
+  if (status === 'FAILED') {
+    return 'red';
+  }
+
+  return 'neutral';
+}
 function normaliseTone(value: unknown): Tone {
   if (value === 'blue' || value === 'green' || value === 'amber' || value === 'red' || value === 'slate') {
     return value;

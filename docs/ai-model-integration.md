@@ -29,10 +29,10 @@ The Invoice Check should run as a sidecar/backend service. The React Native app 
 Recommended flow:
 
 ```text
-Expo app -> CapitalBridge API -> AI verification service -> CapitalBridge risk/financing engine -> Expo app
+Expo app -> CapitalBridge API -> transaction evidence services -> CapitalBridge risk/financing engine -> Expo app
 ```
 
-The AI service can provide:
+Supporting automation can provide:
 
 - Extracted invoice fields from unstructured invoice text.
 - ERP query workflow evidence.
@@ -88,4 +88,4 @@ GET  /state?session_id=<uuid>
 
 ## Prototype Status
 
-The Expo app now includes an AI tab that presents this service as the model layer and maps its tasks into CapitalBridge verification/risk concepts. Direct live HTTP calls are intentionally left for the backend/API layer so the app does not bypass financial controls.
+The Expo app treats Invoice Check as supporting automation and maps its tasks into CapitalBridge verification/risk concepts. Direct live HTTP calls are intentionally left for the backend/API layer so the app does not bypass financial controls.

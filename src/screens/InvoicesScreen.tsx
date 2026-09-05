@@ -15,7 +15,7 @@ export function InvoicesScreen({ role, state }: { role: Role; state: WorkflowSta
         <View>
           <Text style={styles.pageKicker}>{role} workspace</Text>
           <Text style={styles.pageTitle}>Invoices</Text>
-          <Text style={styles.pageSubtitle}>Invoice records are read from Supabase and display the database-owned verification and financing state.</Text>
+          <Text style={styles.pageSubtitle}>Receivable records are read from Supabase and display buyer verification, financing state, and transaction fingerprints.</Text>
         </View>
       </View>
 
@@ -37,7 +37,7 @@ export function InvoicesScreen({ role, state }: { role: Role; state: WorkflowSta
         <InfoRow label="Financing status" value={state.invoice.financingStatus.replace(/_/g, ' ')} />
         <InfoRow label="File" value={state.invoice.fileName} />
         <InfoRow label="File hash" value={state.invoice.fileHash ? `${state.invoice.fileHash.slice(0, 18)}...` : 'Pending'} />
-        <InfoRow label="Invoice fingerprint" value={state.invoice.identityHash ? `${state.invoice.identityHash.slice(0, 18)}...` : 'Pending'} />
+        <InfoRow label="Receivable fingerprint" value={state.invoice.identityHash ? `${state.invoice.identityHash.slice(0, 18)}...` : 'Pending'} />
       </GlassCard>
     </View>
   );

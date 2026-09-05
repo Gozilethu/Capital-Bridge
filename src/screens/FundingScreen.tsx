@@ -33,7 +33,7 @@ export function FundingScreen({
         <View>
           <Text style={styles.pageKicker}>Transparent pricing</Text>
           <Text style={styles.pageTitle}>Funding</Text>
-          <Text style={styles.pageSubtitle}>Offer availability, acceptance locks, disbursement, and settlement are all read from Supabase.</Text>
+          <Text style={styles.pageSubtitle}>Participating financier offers, acceptance locks, disbursement, and settlement are read from Supabase.</Text>
         </View>
         <StatusChip label={state.financingLocked ? 'Financing lock active' : 'No lock'} tone={state.financingLocked ? 'green' : 'neutral'} />
       </View>

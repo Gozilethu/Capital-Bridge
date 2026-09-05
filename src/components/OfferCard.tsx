@@ -31,7 +31,7 @@ export function OfferCard({
           <Text style={styles.offerPartner}>{offer.partner}</Text>
         </View>
         <View style={styles.offerBadges}>
-          {offer.recommended && <Badge label="AI recommended" tone="blue" />}
+          {offer.recommended && <Badge label="Evidence preferred" tone="blue" />}
           {accepted && <Badge label="Accepted" tone="green" />}
         </View>
       </View>

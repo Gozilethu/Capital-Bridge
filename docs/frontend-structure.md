@@ -6,7 +6,7 @@ The Expo UI is organized under `src/` so each concern has a clear home.
 App.tsx                 Root Expo shell and backend-shaped state snapshot
 src/
   components/           Reusable UI building blocks
-  data/                 Seeded demo data, offers, risk factors, AI task mapping
+  data/                 Supabase-backed workspace state, offers, risk factors, and transaction evidence
   screens/              One screen per product area
   theme/                Shared React Native styles
   utils/                Money, risk, and workflow helper functions
@@ -20,7 +20,7 @@ src/
 | `InvoicesScreen` | Canonical invoice record, PO, verification fields, document fingerprints |
 | `UploadInvoiceScreen` | Secure PDF intake, hash, MIME, malware, and extraction checks |
 | `FundingScreen` | Advance amount, offer comparison, acceptance lock, disbursement and settlement |
-| `RiskVerificationScreen` | ERP/PO evidence, duplicate detection, fraud checks, and AI task mapping |
+| `RiskVerificationScreen` | Buyer/ERP evidence, PO and delivery monitoring, duplicate prevention, and transaction risk |
 | `TransactionsScreen` | Ledger-style funding and settlement events |
 | `NotificationsScreen` | Role-aware status and action notifications |
 | `AuditScreen` | Append-oriented event trail and risk-rule weights |
@@ -32,7 +32,7 @@ Reusable components include the desktop/mobile `AppLayout`, restrained `GlassCar
 
 ## Workflow State
 
-The old local `stage` model has been removed. The app now uses a single backend-shaped `WorkflowState` snapshot with an invoice status chain:
+The old local `stage` model has been removed. The app now uses a backend-shaped `WorkflowState` snapshot with a transaction evidence chain:
 
 ```text
 UPLOADED -> SCANNING -> EXTRACTED -> VERIFYING -> VERIFIED -> RISK_ASSESSED -> FINANCE_ELIGIBLE -> OFFER_ACCEPTED -> FUNDED -> SETTLED

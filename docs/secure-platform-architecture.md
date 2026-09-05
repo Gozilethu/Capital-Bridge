@@ -1,6 +1,6 @@
 # Secure Platform Architecture
 
-This document turns the revised product prompt into build rails for CapitalBridge. Phase 1 is the app shell and UI system; AI extraction, financing decisions, and money movement remain backend concerns.
+This document turns the revised product prompt into build rails for CapitalBridge. Phase 1 is the app shell and UI system; verified transaction evidence, financing decisions, and money movement remain backend concerns.
 
 ## 1. UI Architecture
 
@@ -23,8 +23,8 @@ The frontend must never be the authority for invoice or financing state. It rend
 | Invoices | All roles | Canonical invoice record, PO, verification status, and document fingerprints |
 | Upload | SME, Admin | Secure PDF intake and pre-extraction checks |
 | Funding | SME, Financier, Admin | Advance amount, offers, acceptance lock, disbursement, and settlement |
-| Risk | All roles | Verification timeline, ERP evidence, duplicate checks, fraud flags, and score |
-| Transactions | SME, Financier, Admin | Ledger-style funding and settlement events |
+| Risk | All roles | Buyer verification, PO/delivery evidence, duplicate checks, payment behaviour, and score |
+| Transactions | SME, Financier, Admin | Closed-loop PO, delivery, funding, payment, and settlement events |
 | Notifications | All roles | Role-aware action and status notifications |
 | Audit | Financier, Admin | Append-oriented critical event trail |
 | Settings | All roles | Organisation, integration, security, and privacy configuration |
@@ -186,7 +186,7 @@ Do not embed the RL environment directly in the Expo app. Keep it behind the API
 | Supplier bank-detail fraud | Changed account detection and manual review before funding |
 | Lookalike sender domain | Domain similarity check and buyer confirmation requirement |
 | Direct storage access | Private bucket plus path-based RLS policies |
-| AI hallucinated approval | AI output remains evidence only, never final authority |
+| AI hallucinated approval | Automation output remains supporting evidence only, never final authority |
 
 ## 13. Implementation Roadmap
 

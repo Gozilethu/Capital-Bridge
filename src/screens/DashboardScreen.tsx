@@ -34,6 +34,7 @@ export function DashboardScreen({
   const feeCents = calculateFee(state.advanceCents, acceptedOffer?.feeBps ?? 0);
   const trustScore = state.riskFactors.length > 0 ? calculateTrustScore(state.riskFactors) : null;
   const attention = state.riskFactors.find((factor) => factor.kind === 'attention');
+  const latestEvent = state.transactionEvents[state.transactionEvents.length - 1] ?? null;
 
   return (
     <View style={styles.page}>
@@ -41,7 +42,7 @@ export function DashboardScreen({
         <View>
           <Text style={styles.pageKicker}>{role} account</Text>
           <Text style={styles.pageTitle}>Good morning, {accountName}</Text>
-          <Text style={styles.pageSubtitle}>Your cash position is loaded from Supabase across invoices, funding, and settlement activity.</Text>
+          <Text style={styles.pageSubtitle}>Your cash position is backed by verified receivable evidence, financier offers, and settlement monitoring.</Text>
         </View>
         <View style={styles.pageActions}>
           <StatusChip label={statusLabel(state.invoice.status)} tone={statusTone(state.invoice.status)} />
@@ -52,13 +53,13 @@ export function DashboardScreen({
       <View style={styles.metricGrid}>
         <MetricCard
           accent="#45b7a6"
-          helper="Calculated from server-owned invoice state"
+          helper="Calculated from server-owned receivable state"
           label="Available working capital"
           valueCents={availableWorkingCapitalCents(state)}
         />
         <MetricCard
           accent="#7aa7ff"
-          helper={`${state.invoice.dueDays} day terms with ${state.invoice.verificationStatus.toLowerCase()} verification`}
+          helper={`${state.invoice.dueDays} day terms, buyer ${state.invoice.verificationStatus.toLowerCase()}`}
           label="Outstanding invoices"
           valueCents={state.invoice.outstandingCents}
         />
@@ -107,11 +108,15 @@ export function DashboardScreen({
         </GlassCard>
 
         <GlassCard style={styles.sidePanel}>
-          <Text style={styles.panelTitle}>Risk intelligence</Text>
+          <Text style={styles.panelTitle}>Transaction evidence</Text>
           <Text style={styles.amountValue}>{trustScore === null ? 'Pending' : `${trustScore} / 100`}</Text>
           <Text style={styles.tableSecondary}>
             {trustScore === null ? 'Risk factors will appear after the database risk job runs.' : `${riskBand(trustScore)} risk based on verification evidence.`}
           </Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Latest evidence</Text>
+            <Text style={styles.infoValue}>{latestEvent?.label ?? 'No monitoring event yet'}</Text>
+          </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Primary attention</Text>
             <Text style={styles.infoValue}>{attention?.label ?? 'No open attention item'}</Text>
