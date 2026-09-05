@@ -146,10 +146,10 @@ export function UploadInvoiceScreen({
 
             <View style={styles.formColumn}>
               <Text style={styles.fieldLabel}>Invoice amount</Text>
-              <TextInput keyboardType="decimal-pad" placeholder="100000.00" style={styles.textInput} value={amount} onChangeText={setAmount} />
+              <TextInput keyboardType="decimal-pad" placeholder="100000.00" placeholderTextColor="#c4ced8" style={styles.textInput} value={amount} onChangeText={setAmount} />
 
               <Text style={styles.fieldLabel}>Requested advance</Text>
-              <TextInput keyboardType="decimal-pad" placeholder="30000.00" style={styles.textInput} value={requestedAdvance} onChangeText={setRequestedAdvance} />
+              <TextInput keyboardType="decimal-pad" placeholder="30000.00" placeholderTextColor="#c4ced8" style={styles.textInput} value={requestedAdvance} onChangeText={setRequestedAdvance} />
 
               <Pressable accessibilityRole="button" disabled={!canUpload || loading} onPress={submitUpload} style={[styles.primaryButtonCompact, (!canUpload || loading) && styles.disabled]}>
                 <Text style={styles.primaryButtonText}>{loading ? 'Uploading...' : 'Upload invoice'}</Text>

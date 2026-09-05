@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 
 import { AppLayout } from './src/components/AppLayout';
+import { LoadingCard } from './src/components/LoadingCard';
 import { navigationItems } from './src/config/navigation';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { AuditScreen } from './src/screens/AuditScreen';
@@ -36,6 +37,7 @@ export default function App() {
   const [authReady, setAuthReady] = useState(false);
   const [workspaceData, setWorkspaceData] = useState<LoadedWorkspace | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -85,8 +87,18 @@ export default function App() {
     }
   }, [activeTabAllowed]);
 
-  async function refreshWorkspace() {
+  function startLoading(message: string) {
+    setLoadingMessage(message);
     setLoading(true);
+  }
+
+  function stopLoading() {
+    setLoading(false);
+    setLoadingMessage(null);
+  }
+
+  async function refreshWorkspace() {
+    startLoading('Loading your workspace, plan, and latest receivable from Supabase.');
     setError(null);
 
     try {
@@ -94,7 +106,7 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -105,7 +117,7 @@ export default function App() {
     organisationName: string;
     password: string;
   }) {
-    setLoading(true);
+    startLoading('Creating your account and secure organisation workspace.');
     setError(null);
     setNotice(null);
 
@@ -136,12 +148,12 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   async function signIn(email: string, password: string) {
-    setLoading(true);
+    startLoading('Signing in and loading your CapitalBridge workspace.');
     setError(null);
     setNotice(null);
 
@@ -156,12 +168,12 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   async function createWorkspace(input: { accountType: Role; fullName: string; organisationName: string }) {
-    setLoading(true);
+    startLoading('Creating your organisation workspace and default scanner plan.');
     setError(null);
 
     try {
@@ -171,7 +183,7 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -188,7 +200,7 @@ export default function App() {
       return;
     }
 
-    setLoading(true);
+    startLoading('Hashing the PDF, saving receivable evidence, and uploading to private storage.');
     setError(null);
     setNotice(null);
 
@@ -200,12 +212,12 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   async function selectPlan(planId: string) {
-    setLoading(true);
+    startLoading('Updating your scan plan and monthly usage limits.');
     setError(null);
     setNotice(null);
 
@@ -216,7 +228,7 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -225,7 +237,7 @@ export default function App() {
       return;
     }
 
-    setLoading(true);
+    startLoading(loadingMessageForCommand(command));
     setError(null);
     setNotice(null);
 
@@ -235,7 +247,7 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
@@ -244,7 +256,7 @@ export default function App() {
       return;
     }
 
-    setLoading(true);
+    startLoading('Updating the requested advance and recalculating funding values.');
     setError(null);
     setNotice(null);
 
@@ -255,12 +267,12 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   async function acceptOffer(offerId: string) {
-    setLoading(true);
+    startLoading('Locking the selected financier offer against this receivable.');
     setError(null);
     setNotice(null);
 
@@ -270,16 +282,16 @@ export default function App() {
     } catch (nextError) {
       setError(errorMessage(nextError));
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   }
 
   if (!authReady) {
-    return <LoadingScreen label="Checking session..." />;
+    return <LoadingScreen title="Starting CapitalBridge" detail="Checking your saved Supabase Auth session." />;
   }
 
   if (!session) {
-    return <AuthScreen configError={supabaseConfigError} error={error} loading={loading} notice={notice} onSignIn={signIn} onSignUp={signUp} />;
+    return <AuthScreen configError={supabaseConfigError} error={error} loading={loading} loadingMessage={loadingMessage} notice={notice} onSignIn={signIn} onSignUp={signUp} />;
   }
 
   if (!workspaceData) {
@@ -288,6 +300,7 @@ export default function App() {
         email={session.user.email ?? ''}
         error={error}
         loading={loading}
+        loadingMessage={loadingMessage}
         onCreateWorkspace={createWorkspace}
         onSignOut={signOut}
       />
@@ -309,7 +322,7 @@ export default function App() {
         <ScrollView style={styles.scroll} contentContainerStyle={isDesktop && styles.contentWide} showsVerticalScrollIndicator={false}>
           {error && <Text style={styles.appError}>{error}</Text>}
           {notice && !error && <Text style={styles.appNotice}>{notice}</Text>}
-          {loading && <Text style={styles.appNotice}>Syncing with Supabase...</Text>}
+          {loading && <LoadingCard detail={loadingMessage ?? 'Syncing with Supabase.'} />}
           {activeTab === 'Dashboard' &&
             (state ? (
               <DashboardScreen
@@ -361,17 +374,47 @@ function EmptyWorkspaceScreen({ setActiveTab }: { setActiveTab: (tab: Tab) => vo
   );
 }
 
-function LoadingScreen({ label }: { label: string }) {
+function LoadingScreen({ detail, title }: { detail: string; title: string }) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar style="light" />
       <View style={styles.authShell}>
-        <View style={styles.loadingCard}>
-          <Text style={styles.authTitle}>{label}</Text>
-        </View>
+        <LoadingCard detail={detail} title={title} />
       </View>
     </SafeAreaView>
   );
+}
+
+function loadingMessageForCommand(command: WorkflowCommand) {
+  if (command === 'START_SCAN') {
+    return 'Recording document checks and monthly scan usage in Supabase.';
+  }
+
+  if (command === 'COMPLETE_EXTRACTION') {
+    return 'Saving extracted invoice fields for buyer and ERP comparison.';
+  }
+
+  if (command === 'REQUEST_VERIFICATION') {
+    return 'Requesting buyer and ERP confirmation for this receivable.';
+  }
+
+  if (command === 'COMPLETE_VERIFICATION') {
+    return 'Recording buyer confirmation and opening delivery monitoring.';
+  }
+
+  if (command === 'RUN_RISK') {
+    return 'Assessing buyer, PO, duplicate, delivery, and payment evidence.';
+  }
+
+  if (command === 'MARK_ELIGIBLE') {
+    return 'Opening this verified receivable to participating financiers.';
+  }
+
+  if (command === 'DISBURSE_FUNDS') {
+    return 'Recording the partner financier disbursement.';
+  }
+
+  return 'Reconciling buyer payment and settlement ledger entries.';
 }
 
 function errorMessage(error: unknown) {

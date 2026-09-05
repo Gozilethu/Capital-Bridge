@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Image, Pressable, Text, TextInput, View } from 'react-native';
 
+import { LoadingCard } from '../components/LoadingCard';
 import { styles } from '../theme/styles';
 import type { Role } from '../types';
 
@@ -10,6 +11,7 @@ export function AuthScreen({
   configError,
   error,
   loading,
+  loadingMessage,
   notice,
   onSignIn,
   onSignUp,
@@ -17,6 +19,7 @@ export function AuthScreen({
   configError: string | null;
   error: string | null;
   loading: boolean;
+  loadingMessage: string | null;
   notice: string | null;
   onSignIn: (email: string, password: string) => Promise<void>;
   onSignUp: (input: {
@@ -104,6 +107,7 @@ export function AuthScreen({
 
         {(configError || error) && <Text style={styles.authError}>{configError ?? error}</Text>}
         {notice && !configError && !error && <Text style={styles.authNotice}>{notice}</Text>}
+        {loading && <LoadingCard title="Working on your account" detail={loadingMessage ?? 'Connecting securely to Supabase.'} />}
 
         <Pressable accessibilityRole="button" disabled={disabled} onPress={submit} style={[styles.primaryButtonCompact, disabled && styles.disabled]}>
           <Text style={styles.primaryButtonText}>{loading ? 'Please wait...' : mode === 'signup' ? 'Create account' : 'Sign in'}</Text>

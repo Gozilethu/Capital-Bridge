@@ -1244,9 +1244,43 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   loadingCard: {
-    backgroundColor: 'rgba(255,255,255,0.90)',
+    alignSelf: 'stretch',
+    backgroundColor: 'rgba(255,255,255,0.92)',
+    borderColor: 'rgba(255,255,255,0.76)',
     borderRadius: 8,
-    padding: 22,
+    borderWidth: 1,
+    gap: 8,
+    marginBottom: 14,
+    maxWidth: 620,
+    padding: 18,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 22,
+    width: '100%',
+  },
+  loadingHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  loadingKicker: {
+    color: '#8a5a00',
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 0,
+    textTransform: 'uppercase',
+  },
+  loadingTitle: {
+    color: '#102337',
+    fontSize: 18,
+    fontWeight: '900',
+  },
+  loadingDetail: {
+    color: '#526579',
+    fontSize: 13,
+    fontWeight: '700',
+    lineHeight: 20,
   },
   authTitle: {
     color: '#102337',
@@ -1326,9 +1360,11 @@ export const styles = StyleSheet.create({
     lineHeight: 18,
     marginTop: 14,
     padding: 10,
-  },  authSwitch: {
+  },
+  authSwitch: {
     alignItems: 'center',
     marginTop: 12,
     minHeight: 40,
     justifyContent: 'center',
-  },});
+  },
+});

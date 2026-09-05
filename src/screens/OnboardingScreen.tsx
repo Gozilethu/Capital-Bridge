@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 
+import { LoadingCard } from '../components/LoadingCard';
 import { styles } from '../theme/styles';
 import type { Role } from '../types';
 
@@ -10,12 +11,14 @@ export function OnboardingScreen({
   email,
   error,
   loading,
+  loadingMessage,
   onCreateWorkspace,
   onSignOut,
 }: {
   email: string;
   error: string | null;
   loading: boolean;
+  loadingMessage: string | null;
   onCreateWorkspace: (input: { accountType: Role; fullName: string; organisationName: string }) => Promise<void>;
   onSignOut: () => Promise<void>;
 }) {
@@ -51,6 +54,7 @@ export function OnboardingScreen({
         </View>
 
         {error && <Text style={styles.authError}>{error}</Text>}
+        {loading && <LoadingCard title="Creating workspace" detail={loadingMessage ?? 'Saving your workspace in Supabase.'} />}
 
         <Pressable
           accessibilityRole="button"
