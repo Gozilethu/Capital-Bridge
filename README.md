@@ -76,6 +76,34 @@ AI API docs:
 http://localhost:7860/docs
 ```
 
+## Deploy on Vercel
+
+Vercel should build the Expo web app as static files.
+
+Recommended project settings:
+
+```text
+Framework Preset: Other
+Build Command: npm run build
+Output Directory: dist
+Install Command: npm install
+```
+
+Add these required environment variables in Vercel before deploying:
+
+```text
+EXPO_PUBLIC_SUPABASE_URL=https://wiwznymzaacfpnadbyen.supabase.co
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_MQ-zGB1QebUgsfP4sNVtdA_Qblaul8e
+```
+
+Optional AI service variable:
+
+```text
+EXPO_PUBLIC_AI_SERVICE_URL=https://your-deployed-ai-service.example.com
+```
+
+Do not use `http://localhost:7860` for the public Vercel deployment unless you only want local browser testing.
+
 ## Verify
 
 ```powershell
@@ -85,4 +113,3 @@ npm run typecheck
 ## Prototype Boundary
 
 This is a hackathon prototype. Mock ERP, mock banking, synthetic data, and simulated settlement must stay clearly labelled. Final authorization, tenant isolation, financing decisions, and money movement should live in the backend layer, not inside the mobile client.
-"# CapitalBridge"
