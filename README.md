@@ -52,7 +52,19 @@ Clone the AI sidecar locally into:
 InvoiceCheck/
 ```
 
-It exposes a FastAPI service for AP workflow tasks such as invoice extraction, ERP schema drift, duplicate detection, negotiation, and lookalike-domain fraud checks. The local clone is ignored by Git.
+The folder is intentionally ignored by Git because it is a separate repository and can include local Python environment files. Teammates can recreate it with:
+
+```powershell
+npm run setup:invoicecheck
+```
+
+To also create the Python virtual environment and install the sidecar dependencies:
+
+```powershell
+npm run setup:invoicecheck:full
+```
+
+It exposes a FastAPI service for AP workflow tasks such as invoice extraction, ERP schema drift, duplicate detection, negotiation, and lookalike-domain fraud checks.
 
 ```powershell
 npm run ai:env
@@ -73,4 +85,4 @@ npm run typecheck
 ## Prototype Boundary
 
 This is a hackathon prototype. Mock ERP, mock banking, synthetic data, and simulated settlement must stay clearly labelled. Final authorization, tenant isolation, financing decisions, and money movement should live in the backend layer, not inside the mobile client.
-"# CapitalBridge" 
+"# CapitalBridge"

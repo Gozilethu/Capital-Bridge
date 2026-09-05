@@ -21,6 +21,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "setup:invoicecheck": "node scripts/setup-invoicecheck.mjs",
+    "setup:invoicecheck:full": "node scripts/setup-invoicecheck.mjs --install-deps",
     "typecheck": "tsc --noEmit",
     "ai:env": "cd InvoiceCheck && .venv\\Scripts\\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 7860"
   },
